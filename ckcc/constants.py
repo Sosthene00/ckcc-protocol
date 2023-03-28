@@ -39,6 +39,9 @@ PBKDF2_ITER_COUNT = 2500
 # Max depth for derived keys, in PSBT files, and USB commands
 MAX_PATH_DEPTH = const(12)
 
+# Bitmask used in produce_proof_of_ownership (spow) command
+SPOW_USER_CONFIRMATION = const(0x01)
+
 # Bitmask used in sign_transaction (stxn) command
 STXN_FINALIZE       = const(0x01)
 STXN_VISUALIZE      = const(0x02)
@@ -71,8 +74,9 @@ SUPPORTED_ADDR_FORMATS = frozenset([
 
 # BIP-174 aka PSBT defined values
 #
-PSBT_GLOBAL_UNSIGNED_TX     = const(0)
-PSBT_GLOBAL_XPUB            = const(1)
+PSBT_GLOBAL_UNSIGNED_TX             = const(0)
+PSBT_GLOBAL_XPUB                    = const(1)
+PSBT_GLOBAL_OWNERSHIP_COMMITMENT    = const(7)
 
 PSBT_IN_NON_WITNESS_UTXO    = const(0)
 PSBT_IN_WITNESS_UTXO        = const(1)
@@ -83,6 +87,7 @@ PSBT_IN_WITNESS_SCRIPT      = const(5)
 PSBT_IN_BIP32_DERIVATION    = const(6)
 PSBT_IN_FINAL_SCRIPTSIG     = const(7)
 PSBT_IN_FINAL_SCRIPTWITNESS = const(8)
+PSBT_IN_OWNERSHIP_PROOF     = const(0x19)
 
 PSBT_OUT_REDEEM_SCRIPT      = const(0)
 PSBT_OUT_WITNESS_SCRIPT     = const(1)

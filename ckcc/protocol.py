@@ -101,6 +101,12 @@ class CCProtocolPacker:
                     + subpath.encode('ascii') + raw_msg
 
     @staticmethod
+    def produce_proof_of_ownership(path='m', addr_fmt=AF_CLASSIC, commitment_data=b'', user_confirmation=False):
+        flags = 0x0
+        flags |= (SPOW_USER_CONFIRMATION if user_confirmation else 0x00)
+        return pack('<4sIIII', b'spow', addr_fmt, flags, len(path), len(commitment_data)) + path.encode('ascii') + commitment_data
+
+    @staticmethod
     def get_signed_msg():
         # poll completion/results of message signing
         return b'smok'
@@ -114,6 +120,11 @@ class CCProtocolPacker:
     def get_signed_txn():
         # poll completion/results of transaction signing
         return b'stok'
+
+    @staticmethod
+    def get_proof_of_ownership():
+        # poll completion/results of proof of ownership
+        return b'pook'
 
     @staticmethod
     def multisig_enroll(length, file_sha):
@@ -296,5 +307,13 @@ class CCProtocolUnpacker:
         # returns length of resulting PSBT and it's sha256
         ln, sha = unpack_from('<I32s', msg, 4)
         return ln, sha
+
+    def sprx(msg):
+        # proof of ownership result. application specific!
+        # returns proof body (including signature), and ScriptPubKey
+        proof_len, spk_len = unpack_from('<II', msg, 4)
+        proof = msg[12:12+proof_len]
+        spk = msg[12+proof_len:12+proof_len+spk_len]
+        return proof, spk
 
 # EOF
